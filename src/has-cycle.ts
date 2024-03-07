@@ -31,127 +31,24 @@ function createList(items: number[], pos: number): ListNode[] {
 }
 
 function hasCycle(head: ListNode | null): boolean {
-  // Form a sort of a stack and repeatedly check for repitation
-  const map: Map<number, ListNode> = new Map();
-  let mainPos = 0;
-  let mainCurrent = head;
+  // Use two pointer technique with a slow and fast pointer
+  // Slow pointer moves next one at a time
+  // Fast pointer moves next twice at a time
+  // If slow pointer catches up with the fast pointer, then there is a cycle
+  // If fast pointer reaches the end, then there is no cycle
+  let slow = head;
+  let fast = head;
 
-  function verify(
-    existingNode: ListNode,
-    currentPos: number,
-    backPos: number,
-  ): boolean {
-    // Iterate each item and it should match until we reach the current pos
-    let verifyCurrent = existingNode.next;
-    let runningPos = backPos + 1;
-    let alt = map.get(runningPos);
-
-    // Peek next value and see if they are the same
-    if (verifyCurrent && alt && verifyCurrent.val !== alt.val) {
-      return false;
+  while (fast && fast.next) {
+    if (slow) {
+      slow = slow.next;
     }
-
-    console.log(verifyCurrent?.val);
-    console.log(alt?.val);
-    console.log(
-      `currentPos: ${currentPos}, backPos: ${backPos}, runningPos: ${runningPos}`,
-    );
-
-    while (verifyCurrent && alt && runningPos < currentPos) {
-      console.log("inside the loop");
-      if (verifyCurrent.val !== alt.val) {
-        return false;
-      }
-      runningPos += 1;
-
-      alt = map.get(runningPos);
-      const node = verifyCurrent.next;
-
-      if (!alt || !node) {
-        return false;
-      }
-
-      console.log(
-        `node: ${node.val}, alt: ${alt.val}, currentPos: ${currentPos}, backPos: ${backPos}, runningPos: ${runningPos}`,
-      );
-
-      verifyCurrent = node;
+    if (fast) {
+      fast = fast.next?.next;
     }
-    console.log("get passed the loop");
-
-    return runningPos >= currentPos;
-  }
-
-  function checkSelfPointer(node: ListNode, currentPos: number): boolean {
-    // Try at least 2 times before marking as self pointer
-    let current = node;
-    for (let x = 0; x < 5; x++) {
-      if (current.val !== node.val) {
-        return false;
-      }
-      if (!current.next) {
-        return false;
-      }
-
-      current = current.next;
-    }
-    return true;
-  }
-
-  function cycleCheck(node: ListNode, currentPos: number): boolean {
-    // Check if the last value already exists in the map
-    const keys = Array.from(map.keys());
-    let existingKey: number | null = null;
-    for (const k of keys) {
-      if (map.get(k)?.val === node.val) {
-        // Somehow, value already exists
-        existingKey = k;
-        break;
-      }
-    }
-
-    console.log(`existingKey: ${existingKey}, currentPos: ${currentPos}`);
-    if (currentPos > 40) {
-      // Force a break;:
+    if (slow == fast) {
       return true;
     }
-    if (checkSelfPointer(node, currentPos)) {
-      console.log("self pointer");
-      return true;
-    }
-
-    if (existingKey !== null && currentPos > existingKey) {
-      // We definitely have looped back, however, we need to verify
-      // if we can actually arrive on currentPos following the existing key
-      // We need to prove that we actually pointed back into a loop
-      // If we can predict the next item, then we are indeed in a loop
-      // Unless sample linked list actually contain duplicates
-      const existingNode = map.get(existingKey);
-      const nextNode = map.get(existingKey + 1);
-
-      if (existingNode?.next && nextNode) {
-        if (existingNode.next?.val === nextNode.val) {
-          // Pass the original node and the existing node and see if they converge
-          const result = verify(node, currentPos, existingKey);
-          if (result) {
-            console.log(`POS: ${existingKey}`);
-            return true;
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  while (mainCurrent && mainCurrent.next) {
-    console.log(`current: ${mainCurrent.val}, pos: ${mainPos}`);
-    map.set(mainPos, mainCurrent);
-
-    if (cycleCheck(mainCurrent, mainPos)) {
-      return true;
-    }
-    mainCurrent = mainCurrent.next;
-    mainPos += 1;
   }
   return false;
 }
