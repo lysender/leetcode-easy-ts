@@ -1,34 +1,3 @@
-class ListNode {
-  val: number;
-  next: ListNode | null;
-  constructor(val?: number, next?: ListNode | null) {
-    this.val = val === undefined ? 0 : val;
-    this.next = next === undefined ? null : next;
-  }
-}
-
-function createList(items: number[], pos: number): ListNode[] {
-  const reversedItems = [...items];
-  reversedItems.reverse();
-
-  let list: ListNode[] = [];
-  let prev: ListNode | null = null;
-
-  for (const v of reversedItems) {
-    const node: ListNode = new ListNode(v, prev);
-    list.push(node);
-    prev = node;
-  }
-
-  list.reverse();
-
-  if (pos >= 0) {
-    const back = list[pos];
-    list[list.length - 1].next = back;
-  }
-
-  return list;
-}
 
 function hasCycle(head: ListNode | null): boolean {
   // Use two pointer technique with a slow and fast pointer
