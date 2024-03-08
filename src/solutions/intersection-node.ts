@@ -63,3 +63,60 @@ export function getIntersectionNodeTwoPointer(
   }
   return a;
 }
+
+export function getIntersectionNodeDiffNodeCounts(
+  headA: ListNode | null,
+  headB: ListNode | null,
+): ListNode | null {
+  function countElements(head: ListNode | null): number {
+    let x = 0;
+    let current = head;
+    while (current !== null) {
+      current = current.next;
+      x += 1;
+    }
+    return x;
+  }
+
+  // Count lengths of both list, just loop them at the same time
+  let countA = countElements(headA);
+  let countB = countElements(headB);
+
+  // Find out the difference in length
+  const diff = Math.abs(countA - countB);
+
+  // Find the longer list
+  // and reset the pointers
+  let longer: ListNode | null;
+  let shorter: ListNode | null;
+
+  if (countA > countB) {
+    longer = headA;
+    shorter = headB;
+  } else {
+    longer = headB;
+    shorter = headA;
+  }
+
+  // Move pointer a forward
+  for (let x = 0; x < diff; x++) {
+    if (longer === null) {
+      // Not expected
+      return null;
+    }
+    longer = longer.next;
+  }
+
+  // Move each pointer at the same time
+  while (longer !== null && shorter !== null) {
+    if (longer === shorter) {
+      return longer;
+    }
+
+    // Move longer list forward
+    longer = longer?.next ?? null;
+    shorter = shorter?.next ?? null;
+  }
+
+  return null;
+}
