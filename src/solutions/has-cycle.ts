@@ -1,4 +1,4 @@
-import { ListNode, createList } from "../types/list-node";
+import { ListNode, createList } from '../types/list-node';
 
 export function hasCycle(head: ListNode | null): boolean {
   // Use two pointer technique with a slow and fast pointer
