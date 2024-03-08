@@ -1,65 +1,51 @@
+import { describe, it, expect } from 'vitest';
+import { createList } from '../types/list-node';
+import { hasCycle } from './has-cycle';
 
-function hasCycle(head: ListNode | null): boolean {
-  // Use two pointer technique with a slow and fast pointer
-  // Slow pointer moves next one at a time
-  // Fast pointer moves next twice at a time
-  // If slow pointer catches up with the fast pointer, then there is a cycle
-  // If fast pointer reaches the end, then there is no cycle
-  let slow = head;
-  let fast = head;
+describe('has-cycle', () => {
+  describe('test1 - with cycle', () => {
+    it('should pass', async () => {
+      const list = createList([3, 2, 0, -4], 1);
+      expect(hasCycle(list[0])).toBeTruthy();
+    })
+  })
 
-  while (fast && fast.next) {
-    if (slow) {
-      slow = slow.next;
-    }
-    if (fast) {
-      fast = fast.next?.next;
-    }
-    if (slow == fast) {
-      return true;
-    }
-  }
-  return false;
-}
+  describe('test2 - with cycle', () => {
+    it('should pass', async () => {
+      const list = createList([1, 2], 0);
+      expect(hasCycle(list[0])).toBeTruthy();
+    })
+  })
 
-// Run some tests
-function test1() {
-  const list = createList([3, 2, 0, -4], 1);
-  const result = hasCycle(list[0]);
-  console.log(`test1, pos: 1: ${result ? "PASS" : "FAIL"}`);
-}
+  describe('test3 - no cycle', () => {
+    it('should fail', async () => {
+      const list = createList([1], -1);
+      expect(hasCycle(list[0])).toBeFalsy();
+    })
+  })
 
-function test2() {
-  const list = createList([1, 2], 0);
-  const result = hasCycle(list[0]);
-  console.log(`test2, pos: 0: ${result ? "PASS" : "FAIL"}`);
-}
+  describe('test4 - no cycle', () => {
+    it('should fail', async () => {
+      const list = createList(
+        [
+          -21, 10, 17, 8, 4, 26, 5, 35, 33, -7, -16, 27, -12, 6, 29, -12, 5, 9, 20,
+          14, 14, 2, 13, -24, 21, 23, -21, 5,
+        ],
+        -1,
+      );
+      expect(hasCycle(list[0])).toBeFalsy();
+    })
+  })
 
-function test3() {
-  const list = createList([1], -1);
-  const result = hasCycle(list[0]);
-  console.log(`test3, pos: -1: ${!result ? "PASS" : "FAIL"}`);
-}
+  describe('test5 - with cycle', () => {
+    it('should pass', async () => {
+      const list = createList([-1, -7, 7, -4, 19, 6, -9, -5, -2, -5], 9);
+      expect(hasCycle(list[0])).toBeTruthy();
+    })
+  })
 
-function test4() {
-  const list = createList(
-    [
-      -21, 10, 17, 8, 4, 26, 5, 35, 33, -7, -16, 27, -12, 6, 29, -12, 5, 9, 20,
-      14, 14, 2, 13, -24, 21, 23, -21, 5,
-    ],
-    -1,
-  );
-  const result = hasCycle(list[0]);
-  console.log(`test4, pos: -1: ${!result ? "PASS" : "FAIL"}`);
-}
-
-function test5() {
-  const list = createList([-1, -7, 7, -4, 19, 6, -9, -5, -2, -5], 9);
-  const result = hasCycle(list[0]);
-  console.log(`test5, pos: 9: ${result ? "PASS" : "FAIL"}`);
-}
-
-function test6() {
+  describe('test6 - no cycle - very large payload', () => {
+    it('should pass', async () => {
   const list = createList(
     [
       7032, 15013, 6890, 8877, 11344, 320, 13037, 9414, 6817, 1566, 14907,
@@ -790,13 +776,7 @@ function test6() {
     ],
     -1,
   );
-  const result = hasCycle(list[0]);
-  console.log(`test6, pos: -1: ${!result ? "PASS" : "FAIL"}`);
-}
-
-test1();
-test2();
-test3();
-test4();
-test5();
-test6();
+      expect(hasCycle(list[0])).toBeFalsy();
+    })
+  })
+})
